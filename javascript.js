@@ -1,6 +1,3 @@
-let Gameboard = {
-
-}
 
 const boardDisplay = document.querySelector('.container')
 
@@ -35,9 +32,9 @@ function createUser () {
             (arr[2] === arr[4] & arr[4] === arr[6]) && arr[2]  
 
         ){
-            console.log(`winner is ${winner}`)
+            console.log(`winner is ${movesAndWinner.winner}`)
             stopGame()
-        }else if(movesMade === 9){
+        }else if(movesAndWinner.movesMade === 9){
             console.log('it is tie')
             stopGame()
         }
@@ -50,8 +47,14 @@ function stopGame(){
 
     return { arr, testScore};
   }
-  let movesMade = 0  
-  let winner = ""
+
+
+let movesAndWinner = {
+    movesMade : 0,
+    winner : ""
+}  
+//   let movesMade = 0  
+//   let winner = ""
 
   const board = createUser();
   
@@ -61,23 +64,24 @@ function stopGame(){
         // click if it was not clicked
         if(e.target.style.background === ""){
             // order first is x and second o ...
-        if(movesMade % 2 == 0){
+        if(movesAndWinner.movesMade % 2 == 0){
+            // when clicked make background color red
         e.target.style.background = "red"
         board.arr[div.id] = "x"
         console.log(board.arr)
 
-        movesMade+=1
+        movesAndWinner.movesMade+=1
         //who has last move it wins (if it is not tie)
-        winner = "red"
+        movesAndWinner.winner = "red"
         }
         else{
             e.target.style.background = "blue"
             board.arr[div.id] = "o"
             console.log(board.arr)
             
-            movesMade+=1
+            movesAndWinner.movesMade+=1
             
-            winner = "blue"
+            movesAndWinner.winner = "blue"
         }}
         board.testScore()
     })
