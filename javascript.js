@@ -1,16 +1,24 @@
 
-const boardDisplay = document.querySelector('.container')
+const container = document.querySelector('body')
+// const boardDisplay = document.querySelector('.container')
 const display = document.querySelector(".winner")
+const startBtn = document.querySelector(".startGame")
+const restartBtn = document.querySelector(".reStartGame")
 
+startBtn.addEventListener('click',()=>{
+let boardDisplay = document.createElement('div')
+boardDisplay.classList.add('container')
+container.appendChild(boardDisplay)
 
-
+    for(let i=0 ; i<9; i++){
+        let grid = document.createElement('div')
+        grid.classList= `grid-${i}`
+        grid.id = `${i}`
+        boardDisplay.appendChild(grid)
+        }
+})
 // create DOM grid 3x3
-for(let i=0 ; i<9; i++){
-let grid = document.createElement('div')
-grid.classList= `grid-${i}`
-grid.id = `${i}`
-boardDisplay.appendChild(grid)
-}
+
 
 // select grid sections for event listener
 let allGrid = document.querySelectorAll('.container>div')
@@ -57,7 +65,7 @@ function createUser () {
     
     
 function stopGame(){ 
-
+movesAndWinner.gameEnded = true
 }
 
     return { arr, testScore};
@@ -88,39 +96,42 @@ function createSVGFromFile(iconFileName) {
     return svg;
 }
 
+// Select the body element
+const body = document.querySelector('body');
 
-  allGrid.forEach((div)=>{
-    div.addEventListener('click',(e)=>{
-      // Check if the clicked div already contains an SVG element
-      const existingSVG = div.querySelector('svg');
+// Attach the click event to the body and delegate it to the grid elements
+body.addEventListener('click', (e) => {
+    const clickedDiv = e.target.closest('.container>div');
 
-      // Click if it was not clicked and there is no existing SVG
-      if (!existingSVG) {
-            // order first is x and second o ...
-        if(movesAndWinner.movesMade % 2 == 0){
-            // when clicked make background color red
-       
-        div.appendChild(createSVGFromFile("x.svg"));
-        board.arr[div.id] = "x"
-        console.log(board.arr)
-
-        movesAndWinner.movesMade+=1
-        //who has last move it wins (if it is not tie)
-        movesAndWinner.winner = "x"
+    if (clickedDiv) {
+        // Check if the game has ended
+        if (movesAndWinner.gameEnded) {
+            return;  // If the game has ended, do nothing
         }
-        else{
-           
-            div.appendChild(createSVGFromFile("o.svg"));
-            board.arr[div.id] = "o"
-            console.log(board.arr)
-            
-            movesAndWinner.movesMade+=1
-            
-            movesAndWinner.winner = "o"
-        }}
-        board.testScore()
-    })
-})
+
+        // Check if the clicked div already contains an SVG element
+        const existingSVG = clickedDiv.querySelector('svg');
+
+        // Click if it was not clicked and there is no existing SVG
+        if (!existingSVG) {
+            // order first is x and second o ...
+            if (movesAndWinner.movesMade % 2 === 0) {
+                // when clicked make background color red
+                clickedDiv.appendChild(createSVGFromFile("x.svg"));
+                board.arr[clickedDiv.id] = "x";
+                movesAndWinner.winner = "x";
+            } else {
+                clickedDiv.appendChild(createSVGFromFile("o.svg"));
+                board.arr[clickedDiv.id] = "o";
+                movesAndWinner.winner = "o";
+            }
+
+            movesAndWinner.movesMade += 1;
+            board.testScore();
+        }
+    }
+});
+
 
 
 console.log(board.arr)
